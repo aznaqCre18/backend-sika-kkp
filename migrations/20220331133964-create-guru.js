@@ -1,15 +1,15 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('guru', {
+    await queryInterface.createTable("guru", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       nip: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       nama: {
         type: Sequelize.STRING,
@@ -21,40 +21,40 @@ module.exports = {
         type: Sequelize.STRING,
       },
       tempatLahir: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       tanggalLahir: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       jenisKelamin: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       gelarDepan: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       gelarBelakang: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       alamat: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       foto: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       mulaiBertugas: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('guru');
-  }
+    await queryInterface.dropTable("guru");
+  },
 };
