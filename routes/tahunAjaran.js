@@ -9,8 +9,8 @@ const {
 
 const verifyToken = require("../middleware/verifyToken");
 
-router.use("/get-all", getAllTahunAjaran);
-router.use("/add-tahun", addTahunAjaran);
-router.use("/delete-tahun/:id", deleteDataTahunAjaran);
+router.get("/get-all", verifyToken, getAllTahunAjaran);
+router.post("/add-tahun", verifyToken, addTahunAjaran);
+router.delete("/delete-tahun/:id", verifyToken, deleteDataTahunAjaran);
 
 module.exports = router;
