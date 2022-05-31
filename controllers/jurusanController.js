@@ -36,7 +36,6 @@ const addJurusan = async (req, res) => {
 const getDataJurusan = async (req, res) => {
     try {
         const dataJurusan = await models.jurusan.findAll();
-
         res.status(200).send(
             defaultMessage(200, dataJurusan, 'success get all data jurusan')
         );
@@ -47,4 +46,43 @@ const getDataJurusan = async (req, res) => {
     }
 }
 
-module.exports = { addJurusan, getDataJurusan } ;
+const editDataJurusan = async (req, res) => {
+    const { kodeJurusan, namaJurusan } = req.body;
+    const { id } = req.params;
+
+    try {
+        const dataJurusan = await models.jurusan.findOne({ where: {id} });
+
+        dataJurusan.kodeJurusan = kodeJurusan;
+        dataJurusan.namaJurusan = namaJurusan;
+
+        dataJurusan.save();
+
+        res.status(200).send(
+            defaultMessage(200, dataJurusan, 'Sukses edit data jurusan')
+        )
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(
+            defaultMessage(500, error, 'failed edit data jurusan')
+        );
+    }
+}
+
+const deleteDataJurusan = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const dataJurusan = await models.jurusan.findOne({where: {id}});
+
+        dataJurusan.destroy();
+        res.status(200).send(
+            defaultMessage(200, null, 'Sukses hapus data jurusan')
+        )
+    } catch (error) {
+        res.status(500).send(
+            defaultMessage(500, error, 'failed delete data jurusan')
+        );
+    }
+}
+
+module.exports = { addJurusan, getDataJurusan, deleteDataJurusan, editDataJurusan } ;

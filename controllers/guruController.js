@@ -37,7 +37,8 @@ const addGuru = async (req, res) => {
         } else {
             const tambahDataGuru = await models.guru.create({
                 nip,
-                nama,
+                namaGelar: `${gelarDepan} ${nama} ${gelarBelakang}`,
+                namaLengkap: nama,
                 email,
                 tempatLahir,
                 tanggalLahir,
