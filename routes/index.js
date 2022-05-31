@@ -9,6 +9,7 @@ const generalRoute = require("./general");
 const mapelRouter = require("./mapel");
 const tahunAjaranRouter = require("./tahunAjaran");
 const waktuMengajarRouter = require("./waktuMengajar");
+const jadwalMapelRouter = require("./jadwal_mapel");
 
 router.use("/guru", guruRoute);
 router.use("/kelas", kelasRoute);
@@ -18,5 +19,6 @@ router.use("/general", generalRoute);
 router.use("/mapel", mapelRouter);
 router.use("/tahun-ajaran", tahunAjaranRouter);
 router.use("/waktu-mengajar", waktuMengajarRouter);
+router.use("/jadwal-mapel", jadwalMapelRouter);
 
 module.exports = router;

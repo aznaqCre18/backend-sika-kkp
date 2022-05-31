@@ -7,8 +7,12 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ kelas, jurusan, guru, cobaGuru }) {
+    static associate({ jadwal_mapel }) {
       // define association here
+      mapel.hasMany(jadwal_mapel, {
+        foreignKey: "idMapel",
+        as: "jadwal_mapel",
+      });
     }
   }
   mapel.init(

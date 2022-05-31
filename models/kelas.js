@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ siswa, guru, jurusan, mapel }) {
+    static associate({ siswa, guru, jurusan, jadwal_mapel }) {
       // define association here
       kelas.hasMany(siswa, {
         foreignKey: "idKelas",
@@ -16,12 +16,17 @@ module.exports = (sequelize, DataTypes) => {
 
       kelas.belongsTo(guru, {
         foreignKey: "idWaliKelas",
-        as: "guru",
+        as: "waliKelas",
       });
 
       kelas.belongsTo(jurusan, {
         foreignKey: "idJurusan",
         as: "jurusan",
+      });
+
+      kelas.hasMany(jadwal_mapel, {
+        foreignKey: "idKelas",
+        as: "jadwal_mapel",
       });
     }
   }
@@ -30,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       kodeKelas: DataTypes.STRING,
       namaKelas: DataTypes.STRING,
       idWaliKelas: DataTypes.INTEGER,
+      idJurusan: DataTypes.INTEGER,
     },
     {
       sequelize,
