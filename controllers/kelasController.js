@@ -85,6 +85,7 @@ const getAllDataKelas = async (req, res) => {
             defaultMessage(200, dataKelas, 'Berhasil tambah data kelas')
         )
     } catch (error) {
+        console.log(error);
         res.status(500).send(
             defaultMessage(500, null, 'Gagal get semua data kelas')
         )

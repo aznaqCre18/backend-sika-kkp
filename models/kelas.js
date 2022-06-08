@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
       kelas.belongsTo(guru, {
         foreignKey: "idWaliKelas",
-        as: "waliKelas",
+        as: "guru",
       });
 
       kelas.belongsTo(jurusan, {
