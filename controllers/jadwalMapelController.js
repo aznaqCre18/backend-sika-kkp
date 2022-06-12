@@ -1,4 +1,4 @@
-const models = require("../models");
+const models = require("./../models");
 const defaultMessage = require("../utils/defaultMessage");
 
 exports.addDataJadwalMapel = async (req, res) => {
@@ -235,6 +235,331 @@ exports.getDataJadwalMapelById = async (req, res) => {
       .status(200)
       .send(defaultMessage(200, checkDataJadwalMapel, "success tampil data"));
   } catch (error) {
+    res
+      .status(500)
+      .send(defaultMessage(500, null, "gagal tampil data jadwal mapel"));
+  }
+};
+
+// get data by guru & hari
+exports.getDataJadwalMapelByIdGuru = async (req, res) => {
+  try {
+    const { idGuru } = req.params;
+    const { hari } = req.query;
+
+    const checkIdGuru = await models.guru.findOne({ where: { id: idGuru } });
+
+    if (!checkIdGuru)
+      return res
+        .status(404)
+        .send(defaultMessage(404, null, "data tidak ditemukan!"));
+
+    let datajadwalMapelByIdGuru;
+
+    if (hari) {
+      datajadwalMapelByIdGuru = await models.jadwal_mapel.findOne({
+        where: { idGuru, hari },
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "idMapel",
+            "idKelas",
+            "idGuru",
+            "idTahunAjaran",
+            "idWaktuMengajar",
+          ],
+        },
+        include: [
+          {
+            model: models.mapel,
+            as: "mapel",
+            attributes: ["id", "namaMapel", "kodeMapel", "kkm"],
+          },
+          {
+            model: models.guru,
+            as: "guru",
+            attributes: ["nip", "nama", "email", "gelarBelakang", "gelarDepan"],
+          },
+          {
+            model: models.waktu_mengajar,
+            as: "waktuMengajar",
+            attributes: ["kodeWaktuMengajar", "jamMapel", "waktuMapel"],
+          },
+          {
+            model: models.tahun_ajaran,
+            as: "tahunAjaran",
+            attributes: ["thnAjaran", "semester"],
+          },
+          {
+            model: models.kelas,
+            as: "kelas",
+            attributes: ["id", "kodeKelas", "namaKelas"],
+            include: [
+              {
+                model: models.jurusan,
+                as: "jurusan",
+                attributes: ["id", "kodeJurusan", "namaJurusan"],
+              },
+              {
+                model: models.guru,
+                as: "waliKelas",
+                attributes: [
+                  "nip",
+                  "nama",
+                  "email",
+                  "gelarBelakang",
+                  "gelarDepan",
+                ],
+              },
+            ],
+          },
+        ],
+      });
+    } else {
+      datajadwalMapelByIdGuru = await models.jadwal_mapel.findOne({
+        where: { idGuru },
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "idMapel",
+            "idKelas",
+            "idGuru",
+            "idTahunAjaran",
+            "idWaktuMengajar",
+          ],
+        },
+        include: [
+          {
+            model: models.mapel,
+            as: "mapel",
+            attributes: ["id", "namaMapel", "kodeMapel", "kkm"],
+          },
+          {
+            model: models.guru,
+            as: "guru",
+            attributes: ["nip", "nama", "email", "gelarBelakang", "gelarDepan"],
+          },
+          {
+            model: models.waktu_mengajar,
+            as: "waktuMengajar",
+            attributes: ["kodeWaktuMengajar", "jamMapel", "waktuMapel"],
+          },
+          {
+            model: models.tahun_ajaran,
+            as: "tahunAjaran",
+            attributes: ["thnAjaran", "semester"],
+          },
+          {
+            model: models.kelas,
+            as: "kelas",
+            attributes: ["id", "kodeKelas", "namaKelas"],
+            include: [
+              {
+                model: models.jurusan,
+                as: "jurusan",
+                attributes: ["id", "kodeJurusan", "namaJurusan"],
+              },
+              {
+                model: models.guru,
+                as: "waliKelas",
+                attributes: [
+                  "nip",
+                  "nama",
+                  "email",
+                  "gelarBelakang",
+                  "gelarDepan",
+                ],
+              },
+            ],
+          },
+        ],
+      });
+    }
+
+    res
+      .status(200)
+      .send(
+        defaultMessage(
+          200,
+          datajadwalMapelByIdGuru,
+          "success tampil jadwal mapel by id guru"
+        )
+      );
+  } catch (error) {
+    res
+      .status(500)
+      .send(defaultMessage(500, null, "gagal tampil jadwal mapel by id guru"));
+  }
+};
+
+// get data jdawal mapel by kelas & hari
+exports.getDataJadwalMapelByIdKelas = async (req, res) => {
+  try {
+    const { hari } = req.query;
+    const { idKelas } = req.params;
+
+    const checkIdKelas = await models.kelas.findOne({
+      where: { id: idKelas },
+    });
+
+    if (!checkIdKelas)
+      return res
+        .status(404)
+        .send(defaultMessage(404, null, "data tidak ditemukan"));
+
+    let dataJadwalMapelByIdKelas;
+
+    if (hari) {
+      dataJadwalMapelByIdKelas = await models.jadwal_mapel.findOne({
+        where: { idKelas, hari },
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "idMapel",
+            "idKelas",
+            "idGuru",
+            "idTahunAjaran",
+            "idWaktuMengajar",
+          ],
+        },
+        include: [
+          {
+            model: models.mapel,
+            as: "mapel",
+            attributes: ["id", "namaMapel", "kodeMapel", "kkm"],
+          },
+          {
+            model: models.guru,
+            as: "guru",
+            attributes: ["nip", "nama", "email", "gelarBelakang", "gelarDepan"],
+          },
+          {
+            model: models.waktu_mengajar,
+            as: "waktuMengajar",
+            attributes: ["kodeWaktuMengajar", "jamMapel", "waktuMapel"],
+          },
+          {
+            model: models.tahun_ajaran,
+            as: "tahunAjaran",
+            attributes: ["thnAjaran", "semester"],
+          },
+          {
+            model: models.kelas,
+            as: "kelas",
+            attributes: ["id", "kodeKelas", "namaKelas"],
+            include: [
+              {
+                model: models.jurusan,
+                as: "jurusan",
+                attributes: ["id", "kodeJurusan", "namaJurusan"],
+              },
+              {
+                model: models.guru,
+                as: "waliKelas",
+                attributes: [
+                  "nip",
+                  "nama",
+                  "email",
+                  "gelarBelakang",
+                  "gelarDepan",
+                ],
+              },
+            ],
+          },
+        ],
+      });
+    } else {
+      dataJadwalMapelByIdKelas = await models.jadwal_mapel.findOne({
+        where: { idKelas },
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "idMapel",
+            "idKelas",
+            "idGuru",
+            "idTahunAjaran",
+            "idWaktuMengajar",
+          ],
+        },
+        include: [
+          {
+            model: models.mapel,
+            as: "mapel",
+            attributes: ["id", "namaMapel", "kodeMapel", "kkm"],
+          },
+          {
+            model: models.guru,
+            as: "guru",
+            attributes: ["nip", "nama", "email", "gelarBelakang", "gelarDepan"],
+          },
+          {
+            model: models.waktu_mengajar,
+            as: "waktuMengajar",
+            attributes: ["kodeWaktuMengajar", "jamMapel", "waktuMapel"],
+          },
+          {
+            model: models.tahun_ajaran,
+            as: "tahunAjaran",
+            attributes: ["thnAjaran", "semester"],
+          },
+          {
+            model: models.kelas,
+            as: "kelas",
+            attributes: ["id", "kodeKelas", "namaKelas"],
+            include: [
+              {
+                model: models.jurusan,
+                as: "jurusan",
+                attributes: ["id", "kodeJurusan", "namaJurusan"],
+              },
+              {
+                model: models.guru,
+                as: "waliKelas",
+                attributes: [
+                  "nip",
+                  "nama",
+                  "email",
+                  "gelarBelakang",
+                  "gelarDepan",
+                ],
+              },
+            ],
+          },
+        ],
+      });
+    }
+
+    res
+      .status(200)
+      .send(
+        defaultMessage(
+          200,
+          dataJadwalMapelByIdKelas,
+          "success get data jadwal mapel by idkelas"
+        )
+      );
+  } catch (error) {
+    res
+      .status(500)
+      .sen(
+        defaultMessage(500, null, "gagal tampil data jadwal mapel by kelas")
+      );
+  }
+};
+
+exports.getDatajadwalMapelGuruByHari = async (req, res) => {
+  try {
+    const { hari } = req.query;
+    const { idGuru } = req.params;
+
+    console.log(req.query);
+    res.status(200).send(defaultMessage(200, hari, "success tampil data"));
+  } catch (error) {
+    console.log(error);
     res
       .status(500)
       .send(defaultMessage(500, null, "gagal tampil data jadwal mapel"));
