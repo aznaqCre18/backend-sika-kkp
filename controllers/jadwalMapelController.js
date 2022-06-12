@@ -132,7 +132,7 @@ exports.getAllDataJadwalMapel = async (req, res) => {
             },
             {
               model: models.guru,
-              as: "waliKelas",
+              as: "guru",
               attributes: [
                 "nip",
                 "nama",
