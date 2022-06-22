@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   guru.init(
     {
       nip: DataTypes.STRING,
+      isAdmin: DataTypes.BOOLEAN,
       nama: DataTypes.STRING,
       email: DataTypes.STRING,
       tempatLahir: DataTypes.STRING,

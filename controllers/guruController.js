@@ -19,7 +19,7 @@ const addGuru = async (req, res) => {
     } = req.body;
 
     const hashPassword = await bcrypt.hash("123123", 10);
-
+    
     try {
         const getAllDataGuru = await models.guru.findAll({ where: { nip } });
         const getAllDataGuruByEmail = await models.guru.findAll({
@@ -45,22 +45,22 @@ const addGuru = async (req, res) => {
             defaultMessage(500, null, `Gagal, guru dengan nip ${nip} sudah ada!`)
             );
         } else {
-            const tambahDataGuru = await models.guru.create({
-                nip,
-                nama,
-                email,
-                tempatLahir,
-                tanggalLahir,
-                jenisKelamin,
-                gelarDepan,
-                gelarBelakang,
-                alamat,
-                foto,
-                mulaiBertugas,
-                password: hashPassword,
-            });
+            // const tambahDataGuru = await models.guru.create({
+            //     nip,
+            //     nama,
+            //     email,
+            //     tempatLahir,
+            //     tanggalLahir,
+            //     jenisKelamin,
+            //     gelarDepan,
+            //     gelarBelakang,
+            //     alamat,
+            //     foto,
+            //     mulaiBertugas,
+            //     password: hashPassword,
+            // });
 
-            const hashPassword = await bcrypt.hash('123123', 10);
+            // const hashPassword = await bcrypt.hash('123123', 10);
 
             try {
                 const getAllDataGuru = await models.guru.findAll({ where: { nip } });
@@ -157,7 +157,7 @@ const editDataGuru = async (req, res) => {
     });
 
     dataGuru.nip = nip;
-    dataGuru.nama = nama;
+    dataGuru.nama = `${gelarDepan} ${nama} ${gelarBelakang}`;
     dataGuru.email = email;
     dataGuru.tempatLahir = tempatLahir;
     dataGuru.tanggalLahir = tanggalLahir;

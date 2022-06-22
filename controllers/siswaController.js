@@ -70,7 +70,7 @@ const getDataSiswa = async (req, res) => {
     try {
         const dataSiswa = await models.siswa.findAll({
             attributes: {
-                exclude: ['createdAt', 'updatedAt', 'idJurusan', 'idKelas'],
+                exclude: ['createdAt', 'updatedAt'],
             },
             include: [
                 {
@@ -92,8 +92,17 @@ const getDataSiswa = async (req, res) => {
             ]
         });
 
+        const siswaString = JSON.stringify(dataSiswa);
+        const siswaObject = JSON.parse(siswaString);
+
+        const siswa = siswaObject.map(item => ({
+            ...item,
+            namaKelas: item.kelas.namaKelas,
+            namaJurusan: item.jurusan.namaJurusan
+        }))
+
         res.status(200).send(
-            defaultMessage(200, dataSiswa, 'success get all data siswa')
+            defaultMessage(200, siswa, 'success get all data siswa')
         );
     } catch (error) {
         console.log(error);

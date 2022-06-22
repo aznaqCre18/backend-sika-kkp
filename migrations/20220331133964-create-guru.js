@@ -14,6 +14,9 @@ module.exports = {
       nama: {
         type: Sequelize.STRING,
       },
+      isAdmin: {
+        type: Sequelize.BOOLEAN,
+      },
       email: {
         type: Sequelize.STRING,
       },

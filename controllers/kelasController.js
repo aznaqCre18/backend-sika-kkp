@@ -13,6 +13,10 @@ const addKelas = async (req, res) => {
             where: { idWaliKelas: idWaliKelas }
         }); 
 
+        const getDataJurusanById = await models.jurusan.findOne({
+            where: { id: idJurusan }
+        }); 
+
         if(getAllDataKelasByIdWaliKelas.length > 0) {
             res.status(500).send(
                 defaultMessage(500, null, `Gagal tambah data kelas karna wali kelas dengan id "${idWaliKelas}" sudah menjadi wali kelas di kelas lain!`)
@@ -26,7 +30,7 @@ const addKelas = async (req, res) => {
                 } else {
                     const addDataKelas = await models.kelas.create({
                         kodeKelas,
-                        namaKelas,
+                        namaKelas: `${namaKelas} - ${getDataJurusanById.kodeJurusan}`,
                         idWaliKelas,
                         idJurusan
                     });
@@ -39,7 +43,7 @@ const addKelas = async (req, res) => {
         } else {
             const addDataKelas = await models.kelas.create({
                 kodeKelas,
-                namaKelas,
+                namaKelas: `${namaKelas} - ${getDataJurusanById.kodeJurusan}`,
                 idWaliKelas,
                 idJurusan
             });
@@ -60,13 +64,13 @@ const getAllDataKelas = async (req, res) => {
     try {
         const dataKelas = await models.kelas.findAll({
             attributes: {
-                exclude: ['idWaliKelas', 'createdAt', 'updatedAt']
+                exclude: ['createdAt', 'updatedAt']
             },
             include: [
                 {
                     model: models.guru,
                     as: 'guru',
-                    attributes: ['id', 'nip', 'nama', 'gelarDepan', 'gelarBelakang']
+                    attributes: ['id', 'nip', 'nama', 'gelarDepan', 'gelarBelakang'],
                 },
                 {
                     model: models.jurusan,
@@ -81,8 +85,17 @@ const getAllDataKelas = async (req, res) => {
             ]
         });
 
+        const kelasString = JSON.stringify(dataKelas);
+        const kelasObject = JSON.parse(kelasString);
+
+        const kelas = kelasObject.map(item => ({
+            ...item,
+            waliKelas: item.guru.nama,
+            namaJurusan: item.jurusan.namaJurusan
+        }))
+
         res.status(200).send(
-            defaultMessage(200, dataKelas, 'Berhasil tambah data kelas')
+            defaultMessage(200, kelas, 'Berhasil tambah data kelas')
         )
     } catch (error) {
         console.log(error);

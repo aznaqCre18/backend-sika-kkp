@@ -113,7 +113,7 @@ exports.deleteDataWaktuMengajar = async (req, res) => {
 
     res
       .status(200)
-      .sned(defaultMessage(200, null, "success hapus data waktu mengajar"));
+      .send(defaultMessage(200, null, "success hapus data waktu mengajar"));
   } catch (error) {
     res
       .status(500)
