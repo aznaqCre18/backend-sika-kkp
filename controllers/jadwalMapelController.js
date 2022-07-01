@@ -5,80 +5,86 @@ exports.addDataJadwalMapel = async (req, res) => {
   try {
     const { body } = req;
 
-    const addJadwalMapel = await models.jadwal_mapel.create(body);
+    console.log(body);
 
-    console.log("add", addJadwalMapel.id);
+    body.map(async (data, idx) => {
+      await models.jadwal_mapel.create(data);
+    })
 
-    const tampilDataJadwalMapel = await models.jadwal_mapel.findOne({
-      where: { id: addJadwalMapel.id },
-      attributes: {
-        exclude: [
-          "createdAt",
-          "updatedAt",
-          "idMapel",
-          "idKelas",
-          "idGuru",
-          "idTahunAjaran",
-          "idWaktuMengajar",
-        ],
-      },
-      include: [
-        {
-          model: models.mapel,
-          as: "mapel",
-          attributes: ["id", "namaMapel", "kodeMapel", "kkm"],
-        },
-        {
-          model: models.guru,
-          as: "guru",
-          attributes: ["nip", "nama", "email", "gelarBelakang", "gelarDepan"],
-        },
-        {
-          model: models.waktu_mengajar,
-          as: "waktuMengajar",
-          attributes: ["kodeWaktuMengajar", "jamMapel", "waktuMapel"],
-        },
-        {
-          model: models.tahun_ajaran,
-          as: "tahunAjaran",
-          attributes: ["thnAjaran", "semester"],
-        },
-        {
-          model: models.kelas,
-          as: "kelas",
-          attributes: ["id", "kodeKelas", "namaKelas"],
-          include: [
-            {
-              model: models.jurusan,
-              as: "jurusan",
-              attributes: ["id", "kodeJurusan", "namaJurusan"],
-            },
-            {
-              model: models.guru,
-              as: "waliKelas",
-              attributes: [
-                "nip",
-                "nama",
-                "email",
-                "gelarBelakang",
-                "gelarDepan",
-              ],
-            },
-          ],
-        },
-      ],
-    });
+    // const addJadwalMapel = await models.jadwal_mapel.create(body);
+
+    // console.log("add", addJadwalMapel.id);
+
+    // const tampilDataJadwalMapel = await models.jadwal_mapel.findAll({
+    //   attributes: {
+    //     exclude: [
+    //       "createdAt",
+    //       "updatedAt",
+    //       "idMapel",
+    //       "idKelas",
+    //       "idGuru",
+    //       "idTahunAjaran",
+    //       "idWaktuMengajar",
+    //     ],
+    //   },
+    //   include: [
+    //     {
+    //       model: models.mapel,
+    //       as: "mapel",
+    //       attributes: ["id", "namaMapel", "kodeMapel", "kkm"],
+    //     },
+    //     {
+    //       model: models.guru,
+    //       as: "guru",
+    //       attributes: ["nip", "nama", "email", "gelarBelakang", "gelarDepan"],
+    //     },
+    //     {
+    //       model: models.waktu_mengajar,
+    //       as: "waktuMengajar",
+    //       attributes: ["kodeWaktuMengajar", "jamMapel", "waktuMapel"],
+    //     },
+    //     {
+    //       model: models.tahun_ajaran,
+    //       as: "tahunAjaran",
+    //       attributes: ["thnAjaran", "semester"],
+    //     },
+    //     {
+    //       model: models.kelas,
+    //       as: "kelas",
+    //       attributes: ["id", "kodeKelas", "namaKelas"],
+    //       include: [
+    //         {
+    //           model: models.jurusan,
+    //           as: "jurusan",
+    //           attributes: ["id", "kodeJurusan", "namaJurusan"],
+    //         },
+    //         {
+    //           model: models.guru,
+    //           as: "guru",
+    //           attributes: [
+    //             "nip",
+    //             "nama",
+    //             "email",
+    //             "gelarBelakang",
+    //             "gelarDepan",
+    //           ],
+    //         },
+    //       ],
+    //     },
+    //   ],
+    // });
 
     res
       .status(200)
       .send(
         defaultMessage(
           200,
-          tampilDataJadwalMapel,
+          null,
           "success tambah data jadwal mapel"
         )
       );
   } catch (error) {
+    console.log(error);
     res
       .status(500)
       .send(defaultMessage(500, null, "gagal tambah jadwal mapel"));
@@ -472,7 +478,7 @@ exports.getDataJadwalMapelByIdKelas = async (req, res) => {
         ],
       });
     } else {
-      dataJadwalMapelByIdKelas = await models.jadwal_mapel.findOne({
+      dataJadwalMapelByIdKelas = await models.jadwal_mapel.findAll({
         where: { idKelas },
         attributes: {
           exclude: [
@@ -518,7 +524,7 @@ exports.getDataJadwalMapelByIdKelas = async (req, res) => {
               },
               {
                 model: models.guru,
-                as: "waliKelas",
+                as: "guru",
                 attributes: [
                   "nip",
                   "nama",
@@ -533,19 +539,84 @@ exports.getDataJadwalMapelByIdKelas = async (req, res) => {
       });
     }
 
+    let arrTemp = [];
+
+    dataJadwalMapelByIdKelas.map((data) => {
+      if (arrTemp.length < 1) {
+        arrTemp = [
+          {
+            hari: data.hari,
+            mapel: [
+              {
+                id: data.id,
+                jam: data.waktuMengajar.jamMapel,
+                waktu: data.waktuMengajar.waktuMapel,
+                mataPelajaran: data.mapel.namaMapel,
+                guru: data.guru.nama,
+              }
+            ]
+          }
+        ];
+      } else {
+        for (let i = 0; i < arrTemp.length; i++) {
+          const findSome = arrTemp.findIndex((dataFind) => {
+            if (dataFind.hari === data.hari) {
+              return true;
+            } else {
+              return false;
+            }
+          });
+
+          if (findSome !== -1) {
+            arrTemp[findSome].mapel = [
+              ...arrTemp[findSome].mapel,
+              {
+                id: data.id,
+                jam: data.waktuMengajar.jamMapel,
+                waktu: data.waktuMengajar.waktuMapel,
+                mataPelajaran: data.mapel.namaMapel,
+                guru: data.guru.nama,
+              }
+            ];
+            break;
+          } else if (findSome === -1) {
+            arrTemp = [
+              ...arrTemp,
+              {
+                hari: data.hari,
+                mapel: [
+                  {
+                    id: data.id,
+                    jam: data.waktuMengajar.jamMapel,
+                    waktu: data.waktuMengajar.waktuMapel,
+                    mataPelajaran: data.mapel.namaMapel,
+                    guru: data.guru.nama,
+                  }
+                ]
+              }
+            ];
+
+            break;
+          }
+        }
+      }
+      return arrTemp;
+    });
+
     res
       .status(200)
       .send(
         defaultMessage(
           200,
-          dataJadwalMapelByIdKelas,
+          arrTemp,
           "success get data jadwal mapel by idkelas"
         )
       );
   } catch (error) {
+    console.log(error);
     res
       .status(500)
-      .sen(
+      .send(
         defaultMessage(500, null, "gagal tampil data jadwal mapel by kelas")
       );
   }
