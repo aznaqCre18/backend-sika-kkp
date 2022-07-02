@@ -12,6 +12,7 @@ const waktuMengajarRouter = require("./waktuMengajar");
 const jadwalMapelRouter = require("./jadwal_mapel");
 const pertemuanRouter = require("./pertemuan");
 const absenRouter = require("./absen");
+const nilaiRouter = require("./nilai");
 
 router.use("/guru", guruRoute);
 router.use("/kelas", kelasRoute);
@@ -24,5 +25,6 @@ router.use("/waktu-mengajar", waktuMengajarRouter);
 router.use("/jadwal-mapel", jadwalMapelRouter);
 router.use("/pertemuan", pertemuanRouter);
 router.use("/absen", absenRouter);
+router.use("/nilai", nilaiRouter);
 
 module.exports = router;
