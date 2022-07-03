@@ -11,7 +11,23 @@ exports.addNilai = async (req, res) => {
       models.nilai.create(data);
     });
 
-    const tampilDataNilai = await models.nilai.findAll();
+    const tampilDataNilai = await models.nilai.findAll({
+      attributes: {
+        exclude: ["createdAt", "updateAt"],
+      },
+      include: [
+        {
+          model: models.mapel,
+          as: "mapel",
+          attributes: ["id", "namaMapel", "kodeMapel"],
+        },
+        {
+          model: models.siswa,
+          as: "mapel",
+          attributes: ["id", "namaLengkap"],
+        },
+      ],
+    });
 
     res
       .status(200)
@@ -23,7 +39,23 @@ exports.addNilai = async (req, res) => {
 
 exports.getAllDataNilai = async (req, res) => {
   try {
-    const tampilDataNilai = await models.nilai.findAll();
+    const tampilDataNilai = await models.nilai.findAll({
+      attributes: {
+        exclude: ["createdAt", "updateAt"],
+      },
+      include: [
+        {
+          model: models.mapel,
+          as: "mapel",
+          attributes: ["id", "namaMapel", "kodeMapel"],
+        },
+        {
+          model: models.siswa,
+          as: "mapel",
+          attributes: ["id", "namaLengkap"],
+        },
+      ],
+    });
 
     res
       .status(200)
@@ -41,6 +73,21 @@ exports.getDetailDataNilai = async (req, res) => {
       where: {
         id,
       },
+      attributes: {
+        exclude: ["createdAt", "updateAt"],
+      },
+      include: [
+        {
+          model: models.mapel,
+          as: "mapel",
+          attributes: ["id", "namaMapel", "kodeMapel"],
+        },
+        {
+          model: models.siswa,
+          as: "mapel",
+          attributes: ["id", "namaLengkap"],
+        },
+      ],
     });
 
     if (!checkDataId)
@@ -86,6 +133,21 @@ exports.editDataNilai = async (req, res) => {
       where: {
         id,
       },
+      attributes: {
+        exclude: ["createdAt", "updateAt"],
+      },
+      include: [
+        {
+          model: models.mapel,
+          as: "mapel",
+          attributes: ["id", "namaMapel", "kodeMapel"],
+        },
+        {
+          model: models.siswa,
+          as: "mapel",
+          attributes: ["id", "namaLengkap"],
+        },
+      ],
     });
 
     res
