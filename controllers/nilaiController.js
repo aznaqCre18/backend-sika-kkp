@@ -7,13 +7,13 @@ exports.addNilai = async (req, res) => {
 
     console.log(body);
 
-    await body.map((data) => {
-      models.nilai.create(data);
+    body.map(async (data) => {
+      await models.nilai.create(data);
     });
 
     const tampilDataNilai = await models.nilai.findAll({
       attributes: {
-        exclude: ["createdAt", "updateAt"],
+        exclude: ["createdAt", "updatedAt"],
       },
       include: [
         {
@@ -23,7 +23,7 @@ exports.addNilai = async (req, res) => {
         },
         {
           model: models.siswa,
-          as: "mapel",
+          as: "siswa",
           attributes: ["id", "namaLengkap"],
         },
       ],
@@ -31,8 +31,9 @@ exports.addNilai = async (req, res) => {
 
     res
       .status(200)
-      .send(defaultMessage(200, tampilDataNilai, "success tambah data nilai"));
+      .send(defaultMessage(200, "berhasil", "success tambah data nilai"));
   } catch (error) {
+    console.log(error);
     res.status(500).send(defaultMessage(500, null, "gagal tambah nilai"));
   }
 };

@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       idMapel: DataTypes.INTEGER,
       idSiswa: DataTypes.INTEGER,
+      idKelas: DataTypes.INTEGER,
       uh1: DataTypes.STRING,
       uh2: DataTypes.STRING,
       uts: DataTypes.STRING,
@@ -32,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "nilai",
-      tablename: "nilai",
+      tableName: "nilai",
     }
   );
   return nilai;

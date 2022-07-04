@@ -28,6 +28,16 @@ module.exports = {
         onDelete: "CASCADE",
         onDelete: "CASCADE",
       },
+      idKelas: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "kelas",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onDelete: "CASCADE",
+      },
       uh1: {
         type: Sequelize.STRING,
       },
