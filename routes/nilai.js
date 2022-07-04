@@ -11,6 +11,11 @@ router.get(
   verifyToken,
   nilaiController.getNilaiByIdSiswa
 );
+router.get(
+  "/get-nilai/kelas/:id",
+  verifyToken,
+  nilaiController.getDataNilaiByIdKelas
+);
 router.post("/add-nilai", verifyToken, nilaiController.addNilai);
 router.put("/edit-nilai/:id", verifyToken, nilaiController.editDataNilai);
 router.delete(

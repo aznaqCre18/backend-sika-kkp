@@ -26,6 +26,11 @@ exports.addNilai = async (req, res) => {
           as: "siswa",
           attributes: ["id", "namaLengkap"],
         },
+        {
+          model: models.kelas,
+          as: "kelas",
+          attributes: ["id", "kodeKelas", "namaKelas"],
+        },
       ],
     });
 
@@ -54,6 +59,11 @@ exports.getAllDataNilai = async (req, res) => {
           model: models.siswa,
           as: "siswa",
           attributes: ["id", "namaLengkap"],
+        },
+        {
+          model: models.kelas,
+          as: "kelas",
+          attributes: ["id", "kodeKelas", "namaKelas"],
         },
       ],
     });
@@ -88,6 +98,11 @@ exports.getDetailDataNilai = async (req, res) => {
           model: models.siswa,
           as: "siswa",
           attributes: ["id", "namaLengkap"],
+        },
+        {
+          model: models.kelas,
+          as: "kelas",
+          attributes: ["id", "kodeKelas", "namaKelas"],
         },
       ],
     });
@@ -132,6 +147,11 @@ exports.getNilaiByIdSiswa = async (req, res) => {
           as: "siswa",
           attributes: ["id", "namaLengkap"],
         },
+        {
+          model: models.kelas,
+          as: "kelas",
+          attributes: ["id", "kodeKelas", "namaKelas"],
+        },
       ],
     });
 
@@ -150,6 +170,58 @@ exports.getNilaiByIdSiswa = async (req, res) => {
     res
       .status(500)
       .send(defaultMessage(500, null, "gagal get data nilai by siswa"));
+  }
+};
+
+// get nilai by id kelas
+exports.getDataNilaiByIdKelas = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const checkIdkelas = await models.nilai.findOne({
+      where: {
+        idkelas: id,
+      },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+      include: [
+        {
+          model: models.mapel,
+          as: "mapel",
+          attributes: ["id", "namaMapel", "kodeMapel"],
+        },
+        {
+          model: models.siswa,
+          as: "siswa",
+          attributes: ["id", "namaLengkap"],
+        },
+        {
+          model: models.kelas,
+          as: "kelas",
+          attributes: ["id", "kodeKelas", "namaKelas"],
+        },
+      ],
+    });
+
+    if (!checkIdkelas)
+      return res
+        .status(404)
+        .send(defaultMessage(404, null, "data tidak ditemukan"));
+
+    res
+      .status(200)
+      .send(
+        defaultMessage(
+          200,
+          checkIdkelas,
+          "success tampil data niali by id kelas"
+        )
+      );
+  } catch (error) {
+    res
+      .status(500)
+      .send(defaultMessage(500, null, "gagal tampil data nilai by id kelas"));
   }
 };
 
@@ -192,6 +264,11 @@ exports.editDataNilai = async (req, res) => {
           model: models.siswa,
           as: "siswa",
           attributes: ["id", "namaLengkap"],
+        },
+        {
+          model: models.kelas,
+          as: "kelas",
+          attributes: ["id", "kodeKelas", "namaKelas"],
         },
       ],
     });
