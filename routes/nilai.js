@@ -6,6 +6,11 @@ const verifyToken = require("../middleware/verifyToken");
 
 router.get("/get-nilai", verifyToken, nilaiController.getAllDataNilai);
 router.get("/get-nilai/:id", verifyToken, nilaiController.getDetailDataNilai);
+router.get(
+  "/get-nilai/siswa/:id",
+  verifyToken,
+  nilaiController.getNilaiByIdSiswa
+);
 router.post("/add-nilai", verifyToken, nilaiController.addNilai);
 router.put("/edit-nilai/:id", verifyToken, nilaiController.editDataNilai);
 router.delete(
